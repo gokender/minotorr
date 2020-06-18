@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-
 """Tests for `minotor` package."""
-
 
 import unittest
 
