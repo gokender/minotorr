@@ -1,5 +1,5 @@
 """Top-level package for Minotor."""
 
 __author__ = """Gauthier Chaty"""
-__email__ = 'gauthier@chaty.com'
-__version__ = '0.1.0'
+__email__ = 'gauthier.chaty@outlook.com'
+__version__ = '0.2.0'
