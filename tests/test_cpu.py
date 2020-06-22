@@ -7,6 +7,7 @@ class TestCPU(unittest.TestCase):
     """Tests for `cpu` package."""
 
     def setUp(self):
+        
         """Set up test fixtures"""
         self.cpu_obj = cpu.CPU(data_testing.CPU_DATA, 1592483676)
 
