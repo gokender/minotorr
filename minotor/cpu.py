@@ -20,13 +20,13 @@ class CPU:
         for component in self.raw_data['Children'][0]['Children']:
             if component['ImageURL'] == 'images_icon/cpu.png':
                 self.parsed_data = component
-                
+
     def parse_name(self):
         self.name = self.parsed_data['Text']
-        
+
     def parse_cores(self):
         self.cores = len(self.parsed_data['Children'][0]['Children']) - 1
-        
+
     def parse_clocks(self):
         #clocks = {}
         for category in self.parsed_data['Children']:
@@ -42,7 +42,7 @@ class CPU:
                         self.clocks['bus_speed'] = values_temp
                     else:
                         self.clocks[core['Text'].split('#')[1]] = values_temp
-                        
+
     def parse_temperatures(self):
         for category in self.parsed_data['Children']:
             if category['Text'] == 'Temperatures':
@@ -57,7 +57,7 @@ class CPU:
                         self.temperatures['cpu_package'] = values_temp
                     else:
                         self.temperatures[core['Text'].split('#')[1]] = values_temp
-    
+
     def parse_loads(self):
         for category in self.parsed_data['Children']:
             if category['Text'] == 'Load':
@@ -72,7 +72,7 @@ class CPU:
                         self.loads['cpu_total'] = values_temp
                     else:
                         self.loads[core['Text'].split('#')[1]] = values_temp
-                        
+
     def parse_powers(self):
         for category in self.parsed_data['Children']:
             if category['Text'] == 'Powers':
@@ -83,7 +83,7 @@ class CPU:
                         'max': float(core['Max'].rstrip(' W').replace(',', '.')),
                         'unit':'W'
                     }
-  
+
                     if core['Text'] == 'CPU Package':
                         self.powers['cpu_package'] = values_temp
                     elif core['Text'] == 'CPU Cores':
@@ -92,7 +92,7 @@ class CPU:
                         self.powers['cpu_graphics'] = values_temp
                     elif core['Text'] == 'CPU DRAM':
                         self.powers['cpu_dram'] = values_temp
-    
+
     def to_dict(self):
         cpu = {}
         cpu['name'] = self.name
@@ -101,14 +101,14 @@ class CPU:
         cpu['temperatures'] = self.temperatures
         cpu['loads'] = self.loads
         cpu['powers'] = self.powers
-        
+
         return cpu
-        
+
     def update(self, data, last_update):
-        
+
         self.raw_data = data
         self.last_update = last_update
-        
+
         self.parse()
         self.parse_name()
         self.parse_cores()
