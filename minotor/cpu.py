@@ -96,8 +96,8 @@ class CPU:
                         self.powers['cpu_cores'] = values_temp
                     elif core['Text'] == 'CPU Graphics':
                         self.powers['cpu_graphics'] = values_temp
-                    elif core['Text'] == 'CPU DRAM':
-                        self.powers['cpu_dram'] = values_temp
+                    elif core['Text'] == 'CPU Memory':
+                        self.powers['cpu_memory'] = values_temp
 
     def to_dict(self):
         cpu = {}
