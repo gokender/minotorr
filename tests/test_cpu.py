@@ -9,7 +9,7 @@ class TestCPU(unittest.TestCase):
     def setUp(self):
         
         """Set up test fixtures"""
-        self.cpu_obj = cpu.CPU(data_testing.CPU_DATA, 1592483676)
+        self.cpu_obj = cpu.CPU(data_testing.CPU_DATA)
 
     def test_001_cpu_name(self):
         """Test the name of the CPU"""

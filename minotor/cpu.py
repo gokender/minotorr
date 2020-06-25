@@ -3,7 +3,7 @@
 class CPU:
     """"CPU Object"""
 
-    def __init__(self, data, last_update):
+    def __init__(self, data):
 
         self.parsed_data = {}
 
@@ -14,7 +14,7 @@ class CPU:
         self.loads = {}
         self.powers = {}
 
-        self.update(data, last_update)
+        self.update(data)
 
     def parse(self):
         for component in self.raw_data['Children'][0]['Children']:
@@ -55,8 +55,14 @@ class CPU:
                     }
                     if core['Text'] == 'CPU Package':
                         self.temperatures['cpu_package'] = values_temp
+
+                    elif core['Text'] == 'Core Max':
+                        self.temperatures['cpu_max'] = values_temp
+                    elif core['Text'] == 'Core Average':
+                        self.temperatures['cpu_average'] = values_temp
                     else:
-                        self.temperatures[core['Text'].split('#')[1]] = values_temp
+                        if 'Distance' not in core['Text']:
+                            self.temperatures[core['Text'].split('#')[1]] = values_temp
 
     def parse_loads(self):
         for category in self.parsed_data['Children']:
@@ -104,10 +110,9 @@ class CPU:
 
         return cpu
 
-    def update(self, data, last_update):
+    def update(self, data):
 
         self.raw_data = data
-        self.last_update = last_update
 
         self.parse()
         self.parse_name()
