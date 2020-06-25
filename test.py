@@ -1,5 +1,12 @@
-from minotor import minotor
+from minotor import hardwaremonitor
 
-mino = minotor.Minotor()
-print(mino.cpu.name)
-print(mino.cpu.loads)
+comp = hardwaremonitor.HardwareMonitor()
+
+print(comp.cpu.cores)
+print(comp.cpu.temperatures)
+
+
+print(comp.ram.loads)
+print(comp.ram.data)
+
+print(comp.ram.to_dict())

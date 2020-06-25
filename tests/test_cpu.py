@@ -9,58 +9,58 @@ class TestCPU(unittest.TestCase):
     def setUp(self):
         
         """Set up test fixtures"""
-        self.cpu_obj = cpu.CPU(data_testing.CPU_DATA)
+        self.cpu = cpu.CPU(data_testing.CPU_DATA)
 
     def test_001_cpu_name(self):
         """Test the name of the CPU"""
-        self.assertEqual(self.cpu_obj.name, 'Intel Core i5-4590')
+        self.assertEqual(self.cpu.name, 'Intel Core i5-4590')
 
     def test_002_cpu_data(self):
         """Test if it's the right hardware component"""
-        self.assertEqual(self.cpu_obj.parsed_data['ImageURL'], 'images_icon/cpu.png')
+        self.assertEqual(self.cpu.parsed_data['ImageURL'], 'images_icon/cpu.png')
 
     def test_003_cpu_cores(self):
         """Test the number of cores"""
-        self.assertEqual(self.cpu_obj.cores, 4)
+        self.assertEqual(self.cpu.cores, 4)
 
     def test_004_clocks_parsed(self):
         """Test if not empty""" #TODO : change doc
-        self.assertNotEqual(self.cpu_obj.clocks, {})
+        self.assertNotEqual(self.cpu.clocks, {})
 
     def test_005_temperatures_parsed(self):
         """Test if not empty""" #TODO : change doc
-        self.assertNotEqual(self.cpu_obj.temperatures, {})
+        self.assertNotEqual(self.cpu.temperatures, {})
 
     def test_006_loads_parsed(self):
         """Test if not empty""" #TODO : change doc
-        self.assertNotEqual(self.cpu_obj.loads, {})
+        self.assertNotEqual(self.cpu.loads, {})
 
     def test_007_powers_parsed(self):
         """Test if not empty""" #TODO : change doc
-        self.assertNotEqual(self.cpu_obj.powers, {})
+        self.assertNotEqual(self.cpu.powers, {})
 
     def test_008_clocks_structure(self):
         """Test the clocks structure"""
-        #print(type(self.cpu_obj.clocks))
-        self.assertIn('bus_speed', self.cpu_obj.clocks)
-        self.assertIn('1', self.cpu_obj.clocks)
+        #print(type(self.cpu.clocks))
+        self.assertIn('bus_speed', self.cpu.clocks)
+        self.assertIn('1', self.cpu.clocks)
 
     def test_009_temperatures_structure(self):
         """Test the temperatures structure"""
-        #print(type(self.cpu_obj.clocks))
-        self.assertIn('cpu_package', self.cpu_obj.temperatures)
-        self.assertIn('1', self.cpu_obj.temperatures)
+        #print(type(self.cpu.clocks))
+        self.assertIn('cpu_package', self.cpu.temperatures)
+        self.assertIn('1', self.cpu.temperatures)
 
     def test_010_loads_structure(self):
         """Test the loads structure"""
-        #print(type(self.cpu_obj.clocks))
-        self.assertIn('cpu_total', self.cpu_obj.loads)
-        self.assertIn('1', self.cpu_obj.loads)
+        #print(type(self.cpu.clocks))
+        self.assertIn('cpu_total', self.cpu.loads)
+        self.assertIn('1', self.cpu.loads)
 
     def test_011_powers_structure(self):
         """Test the powers structure"""
-        #print(type(self.cpu_obj.clocks))
-        self.assertIn('cpu_package', self.cpu_obj.powers)
-        self.assertIn('cpu_cores', self.cpu_obj.powers)
-        self.assertIn('cpu_graphics', self.cpu_obj.powers)
-        self.assertIn('cpu_dram', self.cpu_obj.powers)
+        #print(type(self.cpu.clocks))
+        self.assertIn('cpu_package', self.cpu.powers)
+        self.assertIn('cpu_cores', self.cpu.powers)
+        self.assertIn('cpu_graphics', self.cpu.powers)
+        self.assertIn('cpu_memory', self.cpu.powers)
