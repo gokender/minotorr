@@ -4,7 +4,7 @@ from datetime import datetime
 
 import requests
 
-from minotor import cpu, ram
+from minotorr import cpu, ram
 
 class Minotor:
 

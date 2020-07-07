@@ -2,7 +2,7 @@
 
 import unittest
 
-from minotor import minotor
+from minotorr import minotor
 
 
 class TestMinotor(unittest.TestCase):

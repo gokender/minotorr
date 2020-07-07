@@ -1,6 +1,6 @@
 import unittest
 
-from minotor import ram
+from minotorr import ram
 from tests import data_testing
 
 class TestRam(unittest.TestCase):

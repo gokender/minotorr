@@ -1,6 +1,6 @@
 import unittest
 
-from minotor import cpu
+from minotorr import cpu
 from tests import data_testing
 
 class TestCPU(unittest.TestCase):
