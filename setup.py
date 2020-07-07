@@ -9,11 +9,11 @@ setuptools.setup(
     name='minotorr',
     version=minotorr.__version__,
     author='gokender',
-    author_email='gauthier.chaty@outlook.com',
+    author_email='gauthier.chaty+pypi@outlook.com',
     description='Unofficial Libre Hardware Monitor python client',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/Gokender/minotor',
+    url='https://github.com/Gokender/minotorr',
     packages=setuptools.find_packages(include=['minotorr']),
     classifiers=[
         'Programming Language :: Python :: 3',

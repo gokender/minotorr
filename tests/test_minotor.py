@@ -2,10 +2,10 @@
 
 import unittest
 
-from minotorr import minotor
+from minotorr import minotorr
 
 
-class TestMinotor(unittest.TestCase):
+class TestMinotorr(unittest.TestCase):
     """Tests for `minotor` package."""
 
     def setUp(self):

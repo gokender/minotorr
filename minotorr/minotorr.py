@@ -6,7 +6,7 @@ import requests
 
 from minotorr import cpu, ram
 
-class Minotor:
+class Minotorr:
 
     def __init__(self, port=8085):
 
