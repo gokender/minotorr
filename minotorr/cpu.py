@@ -1,7 +1,14 @@
 """CPU component module"""
 
 class _Clock:
-    """"""
+    """Private class for creating a Clock object.
+
+    Provides CPU Clock informations from Libre Hardware Monitor webserver.
+
+    :param speed (float):
+    :param cores (list->float):
+    :param unit (str):
+    """
 
     def __init__(self, speed=0.0, cores=[], unit='MHz'):
         self.cores = cores
@@ -9,6 +16,7 @@ class _Clock:
         self.unit = unit
 
     def parse(self, data):
+        """Get CPU/Clock subtree from data dictionnary"""
         for core in data:
             value = float(core['Value'].rstrip(' MHz').replace(',', '.'))
 
@@ -18,6 +26,9 @@ class _Clock:
                 self.cores.append(value)
 
     def to_dict(self):
+        """Transform the _Clock object to dict
+        :rtype: dict
+        """
         data = {}
 
         data['bus_speed'] = self.speed
@@ -33,7 +44,16 @@ class _Clock:
 
 
 class _Temperature:
-    """"""
+    """Private class for creating a Temperature object.
+
+    Provides CPU Temperature informations from Libre Hardware Monitor webserver.
+
+    :param package (float):
+    :param cores (list->float):
+    :param max (float):
+    :param average (float):
+    :param unit (str):
+    """
 
     def __init__(self, package=0.0, cores=[], cmax=0.0, average=0.0, unit='°C'):
         self.cores = cores
@@ -43,6 +63,7 @@ class _Temperature:
         self.unit = unit
 
     def parse(self, data):
+        """Get CPU/Temperature subtree from data dictionnary"""
         for core in data:
             value = float(core['Value'].rstrip(' °C').replace(',', '.'))
 
@@ -57,6 +78,9 @@ class _Temperature:
                     self.cores.append(value)
 
     def to_dict(self):
+        """Transform the _Temperature object to dict
+        :rtype: dict
+        """
         data = {}
 
         data['cpu_package'] = self.package
@@ -73,7 +97,14 @@ class _Temperature:
         return data
 
 class _Load:
-    """"""
+    """Private class for creating a Load object.
+
+    Provides CPU Load informations from Libre Hardware Monitor webserver.
+
+    :param total (float):
+    :param cores (list->float):
+    :param unit (str):
+    """
 
     def __init__(self, total=0.0, cores=[], unit='%'):
 
@@ -82,6 +113,7 @@ class _Load:
         self.unit = unit
 
     def parse(self, data):
+        """Get CPU/Load subtree from data dictionnary"""
         for core in data:
             value = float(core['Value'].rstrip(' %').replace(',', '.'))
             if core['Text'] == 'CPU Total':
@@ -90,6 +122,9 @@ class _Load:
                 self.cores.append(value)
 
     def to_dict(self):
+        """Transform the _Load object to dict
+        :rtype: dict
+        """
         data = {}
 
         data['cpu_total'] = self.total
@@ -104,7 +139,16 @@ class _Load:
         return data
 
 class _Power:
-    """"""
+    """Private class for creating a Power object.
+
+    Provides CPU Power informations from Libre Hardware Monitor webserver.
+
+    :param package (float):
+    :param cores (float):
+    :param graphics (float):
+    :param memory (float):
+    :param unit (str):
+    """
 
     def __init__(self, package=0.0, cores=0.0, graphics=0.0, memory=0.0, unit='W'):
 
@@ -115,6 +159,7 @@ class _Power:
         self.unit = unit
 
     def parse(self, data):
+        """Get CPU/Power subtree from data dictionnary"""
         for core in data:
             value = float(core['Value'].rstrip(' W').replace(',', '.'))
 
@@ -128,6 +173,9 @@ class _Power:
                 self.memory = value
 
     def to_dict(self):
+        """Transform the _Power object to dict
+        :rtype: dict
+        """
         data = {}
 
         data['cpu_package'] = self.package
@@ -140,8 +188,27 @@ class _Power:
         return data
 
 class CPU:
-    """"CPU Object"""
+    """Class for creating a CPU object.
 
+    Provides CPU informations from Libre Hardware Monitor webserver.
+
+    Basic Usage::
+
+      >>> from minotorr import cpu
+      >>> cpu_ob = cpu.CPU(data) # data is the response from HTTP requests
+      >>> cpu_ob.name
+      Intel Core i5-4590
+      >>> cpu_ob.cores
+      4
+      >>> cpu_obj.clock
+      <minotorr.cpu._Clock>
+      >>> cpu_obj.load
+      <minotorr.cpu._Load>
+      >>> cpu_obj.power
+      <minotorr.cpu._Power>
+      >>> cpu_obj.temperature
+      <minotorr.cpu._Temperature>
+    """
     def __init__(self, data):
 
         self.parsed_data = {}
@@ -157,37 +224,47 @@ class CPU:
         self.update(data)
 
     def parse(self):
+        """Get CPU subtree from data dictionnary"""
         for component in self.raw_data['Children'][0]['Children']:
             if component['ImageURL'] == 'images_icon/cpu.png':
                 self.parsed_data = component
 
     def parse_name(self):
+        """Get CPU name"""
         self.name = self.parsed_data['Text']
 
     def parse_cores(self):
+        """Get the number of cores from CPU"""
         self.cores = len(self.parsed_data['Children'][0]['Children']) - 1
 
-    def parse_clocks(self):
+    def parse_clock(self):
+        """Get clocks informations from CPU"""
         for category in self.parsed_data['Children']:
             if category['Text'] == 'Clocks':
                 self.clock.parse(category['Children'])
 
-    def parse_temperatures(self):
+    def parse_temperature(self):
+        """Get temperature informations from CPU"""
         for category in self.parsed_data['Children']:
             if category['Text'] == 'Temperatures':
                 self.temperature.parse(category['Children'])
 
-    def parse_loads(self):
+    def parse_load(self):
+        """Get load informations from CPU"""
         for category in self.parsed_data['Children']:
             if category['Text'] == 'Load':
                 self.load.parse(category['Children'])
 
-    def parse_powers(self):
+    def parse_power(self):
+        """Get power informations from CPU"""
         for category in self.parsed_data['Children']:
             if category['Text'] == 'Powers':
                 self.power.parse(category['Children'])
             
     def to_dict(self):
+        """Transform the CPU object to dict
+        :rtype: dict
+        """
         cpu = {}
         cpu['name'] = self.name
         cpu['cores'] = self.cores
@@ -199,14 +276,17 @@ class CPU:
         return cpu
 
     def update(self, data):
+        """Update CPU Object with new data
+        :param data: Response in JSON from HTTP webserver
+        """
 
         self.raw_data = data
 
         self.parse()
         self.parse_name()
         self.parse_cores()
-        self.parse_clocks()
-        self.parse_temperatures()
-        self.parse_loads()
-        self.parse_powers()
+        self.parse_clock()
+        self.parse_temperature()
+        self.parse_load()
+        self.parse_power()
         
