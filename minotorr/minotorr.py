@@ -19,17 +19,17 @@ class Minotorr:
     def download_data(self):
 
         url = 'http://192.168.0.27:{}/data.json'.format(self.port)
+        date_measure = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+        
         try:
-            date_time = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
-
             response = requests.get(url)
             response.raise_for_status()
 
-            return (response.json(), date_time)
+            return (response.json(), date_measure)
 
         except requests.exceptions.HTTPError as err:
             print(err)
-            return (None, date_time)
+            return (None, date_measure)
 
     def update(self):
 

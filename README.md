@@ -15,7 +15,7 @@ Run it and start the web server. The program is now gathering information on the
 
 ### Library
 
-Next install the library with PIP
+Install the library with PIP
 
 ```sh
 pip install minotorr
@@ -26,7 +26,7 @@ pip install minotorr
 ```python
 from minotorr import minotorr
 
-comp = minotorr.Minotorr(port=2085) #default port 2085
+comp = minotorr.Minotorr(port=2085) #default port 8085
 
 print(comp.cpu.cores)
 print(comp.cpu.temperatures)
@@ -34,6 +34,9 @@ print(comp.cpu.temperatures)
 
 ## Release History
 
+* 0.6.2
+    * CHANGE: Fix typo in documentation
+    * CHANGE: Update warning in minotorr.py 
 * 0.6.0
     * CHANGE: Update project name 
     * CHANGE: Update docs (module code remains unchanged)
