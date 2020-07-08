@@ -1,4 +1,143 @@
-"""Hardware component module"""
+"""CPU component module"""
+
+class _Clock:
+    """"""
+
+    def __init__(self, speed=0.0, cores=[], unit='MHz'):
+        self.cores = cores
+        self.speed = speed
+        self.unit = unit
+
+    def parse(self, data):
+        for core in data:
+            value = float(core['Value'].rstrip(' MHz').replace(',', '.'))
+
+            if core['Text'] == 'Bus Speed':
+                self.speed = value
+            else:
+                self.cores.append(value)
+
+    def to_dict(self):
+        data = {}
+
+        data['bus_speed'] = self.speed
+
+        cpt = 0
+        for core in self.cores:
+            data[str(cpt)] = core
+            cpt += 1
+
+        data['unit'] = self.unit
+   
+        return data
+
+
+class _Temperature:
+    """"""
+
+    def __init__(self, package=0.0, cores=[], cmax=0.0, average=0.0, unit='°C'):
+        self.cores = cores
+        self.package = package
+        self.max = cmax
+        self.average = average
+        self.unit = unit
+
+    def parse(self, data):
+        for core in data:
+            value = float(core['Value'].rstrip(' °C').replace(',', '.'))
+
+            if core['Text'] == 'CPU Package':
+                self.package = value
+            elif core['Text'] == 'Core Max':
+                self.max = value
+            elif core['Text'] == 'Core Average':
+                self.average = value
+            else:
+                if 'Distance' not in core['Text']:
+                    self.cores.append(value)
+
+    def to_dict(self):
+        data = {}
+
+        data['cpu_package'] = self.package
+        data['cpu_max'] = self.max
+        data['cpu_average'] = self.average
+
+        cpt = 0
+        for core in self.cores:
+            data[str(cpt)] = core
+            cpt += 1
+
+        data['unit'] = self.unit
+   
+        return data
+
+class _Load:
+    """"""
+
+    def __init__(self, total=0.0, cores=[], unit='%'):
+
+        self.total = total
+        self.cores = cores
+        self.unit = unit
+
+    def parse(self, data):
+        for core in data:
+            value = float(core['Value'].rstrip(' %').replace(',', '.'))
+            if core['Text'] == 'CPU Total':
+                self.total = value
+            else:
+                self.cores.append(value)
+
+    def to_dict(self):
+        data = {}
+
+        data['cpu_total'] = self.total
+
+        cpt = 0
+        for core in self.cores:
+            data[str(cpt)] = core
+            cpt += 1
+
+        data['unit'] = self.unit
+   
+        return data
+
+class _Power:
+    """"""
+
+    def __init__(self, package=0.0, cores=0.0, graphics=0.0, memory=0.0, unit='W'):
+
+        self.package = package
+        self.cores = cores
+        self.graphics = graphics
+        self.memory = memory
+        self.unit = unit
+
+    def parse(self, data):
+        for core in data:
+            value = float(core['Value'].rstrip(' W').replace(',', '.'))
+
+            if core['Text'] == 'CPU Package':
+                self.package = value
+            elif core['Text'] == 'CPU Cores':
+                self.cores = value
+            elif core['Text'] == 'CPU Graphics':
+                self.graphics = value
+            elif core['Text'] == 'CPU Memory':
+                self.memory = value
+
+    def to_dict(self):
+        data = {}
+
+        data['cpu_package'] = self.package
+        data['cpu_cores'] = self.cores
+        data['cpu_graphics'] = self.graphics
+        data['cpu_memory'] = self.memory
+
+        data['unit'] = self.unit
+   
+        return data
 
 class CPU:
     """"CPU Object"""
@@ -9,10 +148,11 @@ class CPU:
 
         self.name = ''
         self.cores = 0
-        self.clocks = {}
-        self.temperatures = {}
-        self.loads = {}
-        self.powers = {}
+
+        self.clock = _Clock()
+        self.load = _Load()
+        self.power = _Power()
+        self.temperature = _Temperature()
 
         self.update(data)
 
@@ -28,85 +168,33 @@ class CPU:
         self.cores = len(self.parsed_data['Children'][0]['Children']) - 1
 
     def parse_clocks(self):
-        #clocks = {}
         for category in self.parsed_data['Children']:
             if category['Text'] == 'Clocks':
-                for core in category['Children']:
-                    values_temp = {
-                        'min': float(core['Min'].rstrip(' MHz').replace(',', '.')),
-                        'value': float(core['Value'].rstrip(' MHz').replace(',', '.')),
-                        'max': float(core['Max'].rstrip(' MHz').replace(',', '.')),
-                        'unit':'MHz'
-                    }
-                    if core['Text'] == 'Bus Speed':
-                        self.clocks['bus_speed'] = values_temp
-                    else:
-                        self.clocks[core['Text'].split('#')[1]] = values_temp
+                self.clock.parse(category['Children'])
 
     def parse_temperatures(self):
         for category in self.parsed_data['Children']:
             if category['Text'] == 'Temperatures':
-                for core in category['Children']:
-                    values_temp = {
-                        'min': float(core['Min'].rstrip(' °C').replace(',', '.')),
-                        'value': float(core['Value'].rstrip(' °C').replace(',', '.')),
-                        'max': float(core['Max'].rstrip(' °C').replace(',', '.')),
-                        'unit':'°C'
-                    }
-                    if core['Text'] == 'CPU Package':
-                        self.temperatures['cpu_package'] = values_temp
-
-                    elif core['Text'] == 'Core Max':
-                        self.temperatures['cpu_max'] = values_temp
-                    elif core['Text'] == 'Core Average':
-                        self.temperatures['cpu_average'] = values_temp
-                    else:
-                        if 'Distance' not in core['Text']:
-                            self.temperatures[core['Text'].split('#')[1]] = values_temp
+                self.temperature.parse(category['Children'])
 
     def parse_loads(self):
         for category in self.parsed_data['Children']:
             if category['Text'] == 'Load':
-                for core in category['Children']:
-                    values_temp = {
-                        'min': float(core['Min'].rstrip(' %').replace(',', '.')),
-                        'value': float(core['Value'].rstrip(' %').replace(',', '.')),
-                        'max': float(core['Max'].rstrip(' %').replace(',', '.')),
-                        'unit':'%'
-                    }
-                    if core['Text'] == 'CPU Total':
-                        self.loads['cpu_total'] = values_temp
-                    else:
-                        self.loads[core['Text'].split('#')[1]] = values_temp
+                self.load.parse(category['Children'])
 
     def parse_powers(self):
         for category in self.parsed_data['Children']:
             if category['Text'] == 'Powers':
-                for core in category['Children']:
-                    values_temp = {
-                        'min': float(core['Min'].rstrip(' W').replace(',', '.')),
-                        'value': float(core['Value'].rstrip(' W').replace(',', '.')),
-                        'max': float(core['Max'].rstrip(' W').replace(',', '.')),
-                        'unit':'W'
-                    }
-
-                    if core['Text'] == 'CPU Package':
-                        self.powers['cpu_package'] = values_temp
-                    elif core['Text'] == 'CPU Cores':
-                        self.powers['cpu_cores'] = values_temp
-                    elif core['Text'] == 'CPU Graphics':
-                        self.powers['cpu_graphics'] = values_temp
-                    elif core['Text'] == 'CPU Memory':
-                        self.powers['cpu_memory'] = values_temp
-
+                self.power.parse(category['Children'])
+            
     def to_dict(self):
         cpu = {}
         cpu['name'] = self.name
         cpu['cores'] = self.cores
-        cpu['clocks'] = self.clocks
-        cpu['temperatures'] = self.temperatures
-        cpu['loads'] = self.loads
-        cpu['powers'] = self.powers
+        cpu['clock'] = self.clock.to_dict()
+        cpu['temperature'] = self.temperature.to_dict()
+        cpu['load'] = self.load.to_dict()
+        cpu['power'] = self.power.to_dict()
 
         return cpu
 
