@@ -29,11 +29,17 @@ from minotorr import minotorr
 comp = minotorr.Minotorr(port=2085) #default port 8085
 
 print(comp.cpu.cores)
-print(comp.cpu.temperatures)
+print(comp.cpu.temperatures.average)
+
 ```
 
 ## Release History
 
+* 0.7.0
+    * ADD: GPU module
+    * ADD: Docstrings
+    * CHANGE: Change structure of the program
+    * CHANGE: Unit tests updated
 * 0.6.2
     * CHANGE: Fix typo in documentation
     * CHANGE: Update warning in minotorr.py 
@@ -47,7 +53,7 @@ print(comp.cpu.temperatures)
 
 ## Meta
 
-Gauthier Chaty – [@gokender](https://twitter.com/dbader_org) – gauthier.chaty+github@outlook.com
+Gauthier Chaty – [@gokender](https://twitter.com/gokender) – gauthier.chaty+github@outlook.com
 
 Distributed under the MIT license. See ``LICENSE`` for more information.
 

@@ -1,4 +1,5 @@
 """Ram component module"""
+
 class _Load:
     """Private class for creating a Load object.
 

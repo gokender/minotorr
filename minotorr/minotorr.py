@@ -4,7 +4,7 @@ from datetime import datetime
 
 import requests
 
-from minotorr import cpu, ram
+from minotorr import cpu, ram, gpu
 
 class Minotorr:
 
@@ -15,6 +15,7 @@ class Minotorr:
         self.data, self.timestamp = self.download_data()
         self.cpu = cpu.CPU(self.data)
         self.ram = ram.RAM(self.data)
+        self.gpu = gpu.GPU(self.data)
 
     def download_data(self):
 
@@ -32,6 +33,7 @@ class Minotorr:
             return (None, date_measure)
 
     def update(self):
-
         self.data, self.timestamp = self.download_data()
-        self.cpu = self.cpu.update(self.data, self.timestamp)
+        self.cpu = self.cpu.update(self.data)
+        self.ram = self.ram.update(self.data)
+        self.cpu = self.gpu.update(self.data)
