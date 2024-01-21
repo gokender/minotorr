@@ -19,7 +19,7 @@ class Minotorr:
 
     def download_data(self):
 
-        url = 'http://192.168.0.27:{}/data.json'.format(self.port)
+        url = 'http://localhost:{}/data.json'.format(self.port)
         date_measure = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
         
         try:
