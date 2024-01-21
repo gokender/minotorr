@@ -34,6 +34,6 @@ class Minotorr:
 
     def update(self):
         self.data, self.timestamp = self.download_data()
-        self.cpu = self.cpu.update(self.data)
-        self.ram = self.ram.update(self.data)
-        self.gpu = self.gpu.update(self.data)
+        self.cpu.update(self.data)
+        self.ram.update(self.data)
+        self.gpu.update(self.data)
